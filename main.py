@@ -24,14 +24,19 @@ def buildTop():
                 <head>
                 <title>User Login</title>
                 </head>
-                <body bgcolor="lightblue" color="green">'''
+                <body bgcolor="lightblue">
+                <div align="center">'''
 
     return html
 
 
 # bottom of html page
 def buildBottom():
-    html_end = '''</body>
+    image = '''<img src="https://media3.giphy.com/media/rDIbIO2O7UStO/200_s.gif">'''
+    html_end = '''
+                <br/><br/>''' + image + '''
+                </div>
+                </body>
                 </html>'''
     return html_end
 
@@ -63,7 +68,7 @@ def form():
 
 
 # invalid username form
-def formUser():
+def formUser(email):
     form = '''
 
                 <h1>  User Login </h1>
@@ -80,7 +85,7 @@ def formUser():
                     <input type="password" name="verify">
                     <br>
                     <label>Email:</label>
-                    <input type="text" name="email">
+                    <input type="text" name="email"  value="'''+email+'''">
                     <br>
                     <input type="submit">
                     </form>
@@ -89,7 +94,7 @@ def formUser():
 
 
 # invalid password form
-def formPass():
+def formPass(username, email):
     form = '''
 
                 <h1>  User Login </h1>
@@ -97,7 +102,7 @@ def formPass():
                     <label>Enter Login Info Below:
                     <br>
                     <label>Username:</label>
-                    <input type="text" name="username">
+                    <input type="text" name="username"  value="'''+username+'''">
                     <br>
                     <label>Password:</label>
                     <input type="password" name="password">That wasn't a valid password.
@@ -106,16 +111,16 @@ def formPass():
                     <input type="password" name="verify">
                     <br>
                     <label>Email:</label>
-                    <input type="text" name="email">
+                    <input type="text" name="email"  value="'''+email+'''">
                     <br>
                     <input type="submit">
                     </form>
-                <'''
+                '''
     return form
 
 
 # invalid verify form
-def formVerify():
+def formVerify(username, email):
     form = '''
 
                 <h1>  User Login </h1>
@@ -123,7 +128,7 @@ def formVerify():
                     <label>Enter Login Info Below:
                     <br>
                     <label>Username:</label>
-                    <input type="text" name="username">
+                    <input type="text" name="username"  value="'''+username+'''">
                     <br>
                     <label>Password:</label>
                     <input type="password" name="password">That wasn't a valid password.
@@ -132,7 +137,7 @@ def formVerify():
                     <input type="password" name="verify">Your passwords didn't match.
                     <br>
                     <label>Email:</label>
-                    <input type="text" name="email">
+                    <input type="text" name="email"  value="'''+email+'''">
                     <br>
                     <input type="submit">
                     </form>
@@ -141,7 +146,7 @@ def formVerify():
 
 
 # invalid email form
-def formEmail():
+def formEmail(username):
     form = '''
 
                 <h1>  User Login </h1>
@@ -149,7 +154,7 @@ def formEmail():
                     <label>Enter Login Info Below:
                     <br>
                     <label>Username:</label>
-                    <input type="text" name="username">
+                    <input type="text" name="username"  value="'''+username+'''">
                     <br>
                     <label>Password:</label>
                     <input type="password" name="password">
@@ -234,13 +239,13 @@ class MainHandler(webapp2.RequestHandler):
         if invalid:
             for key in error:
                 if key == 'error_username':
-                    main_page = buildTop() + formUser() + buildBottom()
+                    main_page = buildTop() + formUser(email) + buildBottom()
                 elif key == 'error_password':
-                    main_page = buildTop() + formPass() + buildBottom()
+                    main_page = buildTop() + formPass(username, email) + buildBottom()
                 elif key == 'error_verify':
-                    main_page = buildTop() + formVerify() + buildBottom()
+                    main_page = buildTop() + formVerify(username, email) + buildBottom()
                 elif key == 'error_email':
-                    main_page = buildTop() + formEmail() + buildBottom()
+                    main_page = buildTop() + formEmail(username) + buildBottom()
             # writes invalid page
             self.response.write(main_page)
         # if page s valid
@@ -255,10 +260,13 @@ class WelcomeHandler(webapp2.RequestHandler):
 
     # loads the page
     def get(self):
+        image = '''<img src="http://www.i-love-cats.com/images/2015/04/12/cat-wallpaper-38.jpg"
+        width="811" height="456">'''
         # gets the username variable
         username = self.request.get("username")
         # makes it look nice
-        prompt = '<div align="center"><h2>Welcome <strong><marquee>' + username + '</marquee></strong></h2></div>'
+        prompt = '<div align="center"><h2>Welcome <strong><marquee>' + username + '</marquee></strong></h2>' + \
+                 image + '</div>'
         # builds page
         top = buildTop()
         bottom = buildBottom()
